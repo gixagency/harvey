@@ -1218,6 +1218,7 @@ function pageCohort(dir) {
 
 async function loadSettings() {
   loadCodexLogin();
+  document.getElementById('gmail-redirect-uri').textContent = window.location.origin + '/oauth/gmail/callback';
   const data = await api('/api/settings');
   if (!data) return;
 
@@ -1286,7 +1287,7 @@ function saveGmail() {
   const payload = {GMAIL_CLIENT_ID: document.getElementById('gmail-id').value.trim()};
   const sec = document.getElementById('gmail-secret').value;
   if (sec) payload.GMAIL_CLIENT_SECRET = sec;
-  saveEnv(payload, 'Gmail OAuth saved. Now run "harvey gmail auth" in your terminal.').then(loadSettings);
+  saveEnv(payload, 'Gmail credentials saved. Click Connect Gmail next.').then(loadSettings);
 }
 
 function saveSmtp() {
@@ -2650,4 +2651,31 @@ async function codexLoginAction(action) {
     if (data) renderCodexLogin(data);
     else document.getElementById('codex-login-message').textContent = 'Could not reach the server. Refresh Settings and try again.';
   } finally { codexLoginRequest = false; }
+}
+
+async function connectGmail() {
+  const button = document.getElementById('gmail-connect');
+  button.disabled = true;
+  document.getElementById('gmail-connect-link-wrap').hidden = true;
+  try {
+    const data = await api('/api/gmail/connect', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({})});
+    document.getElementById('gmail-connect-message').textContent = data && data.message || 'Could not start Gmail sign-in. Try again.';
+    if (data && data.success) {
+      const url = new URL(data.authorization_url);
+      if (url.origin !== 'https://accounts.google.com' || url.pathname !== '/o/oauth2/v2/auth') throw new Error('Unexpected sign-in URL');
+      document.getElementById('gmail-connect-link').href = url.href;
+      document.getElementById('gmail-connect-link-wrap').hidden = false;
+    }
+  } catch {
+    document.getElementById('gmail-connect-message').textContent = 'Could not start Gmail sign-in. Refresh Settings and try again.';
+  } finally { button.disabled = false; }
+}
+async function checkGmailConnection() {
+  document.getElementById('gmail-connect-message').textContent = 'Checking Gmail…';
+  const data = await api('/api/gmail/check', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({})});
+  document.getElementById('gmail-connect-message').textContent = data && data.message || 'Could not reach Harvey. Try again.';
+  if (data && data.success) {
+    document.getElementById('gmail-connect-link-wrap').hidden = true;
+    loadSettings();
+  }
 }

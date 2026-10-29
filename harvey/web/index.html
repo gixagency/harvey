@@ -311,7 +311,7 @@
     <div class="settings-row">
       <div>
         <h3>Gmail / Google Workspace <span class="tag accent">Recommended</span> <span id="gmail-status" class="email-tag"></span></h3>
-        <p class="desc">Use a mailbox on a dedicated secondary domain. Create an OAuth client (type "Desktop app") in Google Cloud Console → Gmail API, paste the id and secret, save, then run <code>harvey gmail auth</code>.</p>
+        <p class="desc">Create a Google OAuth client of type "Web application". Add this redirect URI: <code id="gmail-redirect-uri"></code>. Paste the client ID and secret below and save. Then connect gixinvestmentug@gmail.com through Google. Gmail access allows reading, sending and managing messages.</p>
       </div>
       <div class="fields">
         <div class="form-group"><label class="form-label" for="gmail-id">Client ID</label>
@@ -319,7 +319,12 @@
         <div class="form-group"><label class="form-label" for="gmail-secret">Client secret</label>
           <div class="with-btn"><input type="password" class="form-input" id="gmail-secret" placeholder="Enter client secret" autocomplete="off">
             <button class="btn btn-secondary" onclick="toggleVisibility('gmail-secret')">Show</button></div></div>
-        <button class="btn btn-primary btn-sm" onclick="saveGmail()">Save Gmail</button>
+        <button class="btn btn-primary btn-sm" onclick="saveGmail()">Save Gmail credentials</button>
+        <button id="gmail-connect" class="btn btn-primary btn-sm" onclick="connectGmail()">Connect Gmail</button>
+        <button class="btn btn-secondary btn-sm" onclick="checkGmailConnection()">Check Gmail connection</button>
+        <p id="gmail-connect-message" role="status" aria-live="polite"></p>
+        <p id="gmail-connect-link-wrap" hidden><a id="gmail-connect-link" target="_blank" rel="noopener noreferrer">Continue to Google sign-in ↗</a></p>
+        <p class="desc">Google apps in Testing require reconnection after seven days. This connection does not turn on sending.</p>
       </div>
     </div>
 

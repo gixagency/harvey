@@ -364,6 +364,18 @@ async def codex_login_check():
     return await login.check()
 
 
+@app.post("/api/gmail/connect")
+async def gmail_web_connect():
+    from harvey.gmail_web import start
+    return await start()
+
+
+@app.post("/api/gmail/check")
+async def gmail_web_check():
+    from harvey.gmail_web import check
+    return await check()
+
+
 @app.get("/api/settings")
 async def get_settings():
     """Get current settings — presence flags only for secrets, never raw values."""

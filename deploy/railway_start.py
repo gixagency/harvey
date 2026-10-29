@@ -37,4 +37,4 @@ os.environ['CODEX_HOME'] = str(volume / 'home' / '.codex')
 Path(os.environ['CODEX_HOME']).mkdir(mode=0o700, parents=True, exist_ok=True)
 os.chdir(root)
 # No heartbeat is started automatically. Operator starts it in the dashboard.
-os.execv(sys.executable, [sys.executable, '-m', 'uvicorn', 'deploy.railway_gateway:app', '--app-dir', str(root), '--host', '0.0.0.0', '--port', os.environ.get('PORT', '8080'), '--no-proxy-headers'])
+os.execv(sys.executable, [sys.executable, '-m', 'uvicorn', 'deploy.railway_gateway:app', '--app-dir', str(root), '--host', '0.0.0.0', '--port', os.environ.get('PORT', '8080'), '--no-proxy-headers', '--no-access-log'])

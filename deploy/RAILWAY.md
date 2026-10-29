@@ -36,3 +36,17 @@ Start the worker through the dashboard only after configuration. Start/stop is m
 `/state/harvey/data` holds SQLite, logs and the dashboard token. `/state/harvey/harvey.yaml`, `harvey.local.yaml` (if created), `.env`, trained prompts/skills and `/state/home/.codex` persist. Application code refreshes on each boot; prompts and skills are seeded only on first boot, so review upstream knowledge updates manually. Enable Railway volume backups and treat backups as sensitive. Do not mount a volume over `/opt/harvey`.
 
 The image intentionally omits browser binaries and Claude. Use native email providers and Codex. LinkedIn browser automation and the original Claude Docker workflow are outside this deployment.
+
+## Connect the GIX Gmail mailbox through Google
+
+1. Enable Gmail API in your Google Cloud project. Configure an External OAuth consent screen, keep Testing initially, and add `gixinvestmentug@gmail.com` as a test user.
+2. Create an OAuth client of type **Web application**. Add `https://YOUR-PUBLIC-HOST/oauth/gmail/callback` as its exact authorized redirect URI. JavaScript origins are not needed.
+3. In Harvey Settings → Gmail / Google Workspace, enter the Client ID and Client secret, then click **Save Gmail credentials**. Keep the secret out of GitHub, chats and screenshots.
+4. Click **Connect Gmail**, then **Continue to Google sign-in**. Approve the Gmail permission using `gixinvestmentug@gmail.com`. This grants the Gmail modify scope needed by the existing provider for sending, reply reading and read-state management.
+5. Close the Google return tab, return to the original Harvey tab, and click **Check Gmail connection**. No email is sent by the connection check.
+
+The callback uses one-time expiring state bound to an HttpOnly Secure SameSite=Lax browser cookie and PKCE. Only the exact callback is public; connection creation and checks require the dashboard token. Tokens are stored owner-only on the volume and are never returned to the dashboard. Application access logging is disabled to keep OAuth codes out of application request logs. A service restart invalidates unfinished sign-ins; already saved tokens persist.
+
+The mailbox is restricted to `gixinvestmentug@gmail.com` by default. `GMAIL_EXPECTED_EMAIL` changes that restriction if the operator later chooses another mailbox. The connection does not change the configured sender, enable email, remove an existing send pause or start the worker. Confirm the sender address and campaign configuration before any outreach.
+
+Google OAuth apps in Testing have refresh tokens that expire after seven days for Gmail scopes; reconnect from Settings when needed. Review production OAuth requirements separately before treating this as a permanent unattended integration.
