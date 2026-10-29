@@ -65,7 +65,7 @@ async def prepare(root):
     revised = 0
     previous = {}
     if pack.get('previous_version'):
-        prior_file = root / 'deploy/gix_launch.v1.json'
+        prior_file = root / pack.get('previous_snapshot', 'deploy/gix_launch.v1.json')
         if prior_file.exists():
             previous = {x['email']: x for x in json.loads(prior_file.read_text())['leads'] if x['email']}
     for lead in pack['leads']:

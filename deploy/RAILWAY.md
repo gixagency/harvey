@@ -64,3 +64,13 @@ Settings shows a GIX pilot review card with sources and outstanding checks. No m
 The 29 October website refinement loads the newer Software and Digital Marketing service structure and updates the agency pitch around website builds, custom applications and workflow integrations. The full service catalogue is available to the agents without listing every service in first contact.
 
 The v2 migration only rewrites v1 Outbox rows that are still pending review and match the original subject and body exactly. It preserves human edits, approved/sent messages, existing contact grades and opt-outs. Existing rows are moved to the v2 review campaign instead of duplicating introductions. `deploy/gix_launch.v1.json` is the comparison snapshot, not an active second contact list. Sending remains disabled and paused after the refinement.
+
+## Send the pilot from Harvey without a paid verifier
+
+The pilot supports explicit review of the four inboxes recorded in `gix_launch.json`. In Outbox, use **Approve published address & email**, or **Approve published address** for an already approved row. This is a separate decision from ordinary message approval: it records that the operator accepts sending that exact first message to a published but unverified address. It never marks a mailbox verified. Approve All does not create these receipts.
+
+Receipts bind the outbox item, recipient, company source URL, campaign, subject and body. They expire after seven days and are invalid after edits. They require human approval, apply to a first sequence message only, and never override a known-invalid/risky verdict, opt-out, previous reply/contact, do-not-contact rule, content check, bounce pause or send limit. They do not apply to arbitrary scraped or guessed addresses and cannot be used by autopilot.
+
+Once the desired first messages are reviewed, Settings → **Send the approved agency pilot** accepts the sender's real postal address and an explicit **Enable approved pilot sending** action. Readiness requires one to four individually approved pilot messages, working Gmail and a usable saved Codex login. No unrelated approved mail may be in the queue. The action enables Gmail in approval mode, sets a five-email/day cap and recipient-local weekday 09:00–17:00 window, starts the normal worker, then removes the sending pause only if start succeeds. New messages and replies still require approval. Pause sending through Outbox or stop the worker through Controls.
+
+Nothing is sent merely by deploying the feature or approving a published address. Deployment preserves the held review state. The v3 copy migration also removes a duplicate portfolio link from one untouched v2 draft so the existing content gate's one-link limit remains satisfied.

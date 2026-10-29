@@ -291,6 +291,16 @@
   <div class="subhead">GIX pilot — founder review</div>
   <div id="gix-launch-review-card" class="card">Loading the prepared offer and prospect list…</div>
 
+  <div class="card">
+    <h3>Send the approved agency pilot</h3>
+    <p class="desc">No paid email verifier is required for the four researched inboxes if you explicitly approve each published address and first email in Outbox. Mailboxes remain unverified. Editing a message requires a new address approval.</p>
+    <label class="form-label" for="pilot-postal-address">Your real sender postal address for the email footer</label>
+    <textarea id="pilot-postal-address" class="form-input" rows="3" placeholder="Company, street/building, city, country"></textarea>
+    <p class="desc">After you click Enable, Harvey starts the normal workflow and can send approved emails during UK business hours, up to five per day. New drafts and replies still wait for approval.</p>
+    <button id="pilot-enable" class="btn btn-primary btn-sm" onclick="enableApprovedPilot()">Enable approved pilot sending</button>
+    <p id="pilot-enable-message" role="status" aria-live="polite"></p>
+  </div>
+
   <div class="subhead">AI connection</div>
   <div class="card">
     <h3>Codex / ChatGPT</h3>

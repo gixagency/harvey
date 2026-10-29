@@ -80,6 +80,10 @@ async def test_refinement_updates_only_untouched_pending_drafts(root):
         await db.execute('UPDATE outbox SET status=? WHERE to_email=?', ('approved', 'team@hicojo.com'))
         await db.execute('UPDATE prospects SET status=? WHERE email=?', ('opted_out', 'collab@extract.studio'))
         await db.commit()
+    latest_data = json.loads(latest)
+    latest_data['previous_version'] = original['version']
+    latest_data['previous_snapshot'] = 'deploy/gix_launch.v1.json'
+    latest = json.dumps(latest_data)
     (root / 'deploy/gix_launch.json').write_text(latest)
     assert await prepare(root) is True
     pending = await state.get_outbox(status='pending_review')

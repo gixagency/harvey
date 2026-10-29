@@ -238,11 +238,12 @@ async def get_setup_status():
     # 4. Email verification (needed for addresses to be sendable, not 'guess')
     verifier_set = _has("REOON_API_KEY") or _has("ZEROBOUNCE_API_KEY") or _has("HUNTER_API_KEY")
     checks.append({
-        "id": "verifier", "label": "Email verification key",
+        "id": "verifier", "label": "Email verification key (optional for the reviewed pilot)",
         "done": verifier_set,
-        "required": True,
-        "help": "Add a Reoon (free 600/mo), ZeroBounce, or Hunter key in Settings — "
-                "without one, found emails stay 'guess' and are never sent.",
+        "required": False,
+        "help": "Optional verifier for new contacts. For the four researched pilot inboxes, "
+                "you may explicitly approve each published address and exact first email in Outbox; "
+                "the mailbox stays unverified. Other guessed addresses remain blocked.",
     })
 
     # 5. Config valid
@@ -375,6 +376,43 @@ async def gmail_web_check():
     return await check()
 
 
+@app.post("/api/gix-launch/enable-approved")
+async def enable_approved_pilot(request: Request):
+    try:
+        data = await request.json()
+    except ValueError:
+        data = None
+    if not isinstance(data, dict) or data.get("confirm") != "enable_individually_approved_pilot":
+        return _refuse("Confirm you want Harvey to start sending your individually approved pilot emails.", 400)
+    if _check_harvey_pid():
+        return _refuse("Stop Harvey in Controls before changing pilot sending settings.", 409)
+    from harvey.pilot_sending import ready_items, enable_config
+    state = _state()
+    await state.init_db()
+    try:
+        items = await ready_items(state, PROJECT_ROOT)
+        from harvey.gmail_web import check
+        gmail_status = await check()
+        if not gmail_status.get("success"):
+            return _refuse("Connect and check GIX Gmail in Settings first.", 409)
+        from harvey.codex import check_native_auth
+        await asyncio.to_thread(check_native_auth)
+        await state.set_setting("sending_paused", "Pilot activation checks in progress")
+        enable_config(_resolve_config_file(), data.get("postal_address", ""))
+    except ValueError as e:
+        return _refuse(str(e), 409)
+    except Exception:
+        return _refuse("Pilot readiness check failed. Check Gmail and Codex connections; sending stays paused.", 409)
+    # Starts the usual loop: inbox reading, stop-on-reply, final gate, caps and
+    # send windows are unchanged. No direct send bypass is introduced.
+    started = await start_harvey()
+    if not started.get("success"):
+        return _refuse(started.get("message", "Could not start Harvey. Sending stays paused."), 409)
+    await state.set_setting("sending_paused", "")
+    await state.log_action("approved_pilot_enabled", "dashboard", {"outbox_ids": [x["id"] for x in items], "approval_required": True, "max_daily_sends": 5})
+    return {"success": True, "message": "Harvey started. Your approved pilot emails can send during UK business hours, up to five per day. Every new message still requires approval. Pause sending in Outbox at any time."}
+
+
 @app.get("/api/gix-launch")
 async def gix_launch_review():
     pack = json.loads((PROJECT_ROOT / "deploy" / "gix_launch.json").read_text())
@@ -384,6 +422,10 @@ async def gix_launch_review():
     values = _read_env_file()
     pack["verification_key_present"] = any(values.get(k) or os.getenv(k) for k in
         ("REOON_API_KEY", "ZEROBOUNCE_API_KEY", "HUNTER_API_KEY"))
+    from harvey.config import load_config
+    config = load_config(str(_resolve_config_file()))
+    pack["sending_enabled"] = config.channels.email.enabled
+    pack["sending_paused"] = bool(await state.get_setting("sending_paused"))
     pack["ready_for_sending"] = False
     return pack
 
@@ -1040,6 +1082,10 @@ async def _with_context(items: list[dict]) -> list[dict]:
 
     for item in items:
         p = people.get(item.get("prospect_id")) or {}
+        from harvey.published_contact import eligible, has_review
+        prospect = await _state().get_prospect(item.get("prospect_id", ""))
+        item["published_review_eligible"] = item.get("status") in ("pending_review", "approved") and eligible(item, prospect, PROJECT_ROOT)
+        item["published_review_approved"] = await has_review(_state(), item, prospect, PROJECT_ROOT)
         item["context"] = {
             "campaign": campaigns.get(item.get("campaign_id"), ""),
             "company": p.get("company_name", ""),
@@ -1072,7 +1118,7 @@ async def get_outbox_api():
             "pending": await _with_context(
                 await state.get_outbox(status="pending_review", limit=100)),
             # Mail going out right now leads the list.
-            "approved": (await state.get_outbox(status="sending", limit=10)
+            "approved": await _with_context(await state.get_outbox(status="sending", limit=10)
                          + await state.get_outbox(status="approved", limit=50)),
             "sent": (await query_db(
                 "SELECT * FROM outbox WHERE status = 'sent' "
@@ -1159,6 +1205,26 @@ async def outbox_approve(item_id: str):
         return {"success": bool(n)}
     except Exception as e:
         return JSONResponse({"success": False, "message": str(e)}, status_code=500)
+
+
+@app.post("/api/outbox/{item_id}/approve-published")
+async def outbox_approve_published(item_id: str, request: Request):
+    try:
+        data = await request.json()
+    except ValueError:
+        data = None
+    if not isinstance(data, dict) or data.get("confirm") != "send_this_published_address_unverified":
+        return _refuse("Explicit approval of this published, unverified address is required.", 400)
+    from harvey.published_contact import approve
+    state = _state()
+    await state.init_db()
+    item = await state.get_outbox_item(item_id)
+    if not item:
+        return _refuse("Draft not found.", 404)
+    prospect = await state.get_prospect(item["prospect_id"])
+    if not await approve(state, item, prospect, PROJECT_ROOT):
+        return _refuse("This draft is not eligible for published-address review. Only pending first messages to the researched pilot inboxes are eligible.", 409)
+    return {"success": True, "message": "Approved for this message only. The address remains unverified; sending controls still apply."}
 
 
 @app.post("/api/outbox/{item_id}/edit")

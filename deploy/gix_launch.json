@@ -1,5 +1,5 @@
 {
-  "version": "gix-uk-review-2026-10-29-v2",
+  "version": "gix-uk-review-2026-10-29-v3",
   "market": "United Kingdom — proposed pilot for founder approval",
   "offer": "Website, custom software and automation delivery support for agencies",
   "pricing": "Project-based quote after reviewing the brief; ongoing support scoped separately. No fixed prices, discounts or timelines approved.",
@@ -11,12 +11,12 @@
     "https://gixagency.com/services/digital-marketing-strategy",
     "https://gixagency.com/services/video-production-photography"
   ],
-  "verification": "Contact addresses were published on agency websites. Publication is not mailbox verification; all new contacts remain unverified until checked.",
+  "verification": "Published addresses remain mailbox-unverified. Either verify them with an optional provider, or explicitly approve a researched published address and exact first email in Outbox.",
   "blockers": [
     "Founder approval of UK pilot, offer, list and copy",
-    "Mailbox verification key and successful verdicts",
+    "Verified mailbox OR explicit per-message approval of the researched published address",
     "Confirmed sender postal address and recipient suitability review",
-    "Test send and reply before any outreach"
+    "Working Gmail/Codex connections and deliberate activation of approved sending"
   ],
   "leads": [
     {
@@ -53,7 +53,7 @@
       "evidence": "The Collaborators section invites introductions and portfolios; its digital services include web development and CMS integration.",
       "priority": "high",
       "subject": "Development collaboration with Extract",
-      "body": "Hi Extract team,\n\nI saw your invitation for collaborators and your work across website design, development and CMS integration.\n\nI’m Tonny, founder of GIX Agency. We combine software development and digital marketing. For a collaboration with Extract, I’d focus on website builds, custom web applications or integrations that support your digital briefs. Our own product work is at https://gixagency.com/projects.\n\nWould that be relevant to your collaborator network?\n\nTonny Mpagi Preacher\nGIX Agency\nhttps://gixagency.com/\n\nIf this isn’t relevant, reply ‘no thanks’ and I won’t follow up."
+      "body": "Hi Extract team,\n\nI saw your invitation for collaborators and your work across website design, development and CMS integration.\n\nI’m Tonny, founder of GIX Agency. We combine software development and digital marketing. For a collaboration with Extract, I’d focus on website builds, custom web applications or integrations that support your digital briefs. Our own product work is at https://gixagency.com/projects.\n\nWould that be relevant to your collaborator network?\n\nTonny Mpagi Preacher\nGIX Agency\n\nIf this isn’t relevant, reply ‘no thanks’ and I won’t follow up."
     },
     {
       "name": "Set Studio",
@@ -82,7 +82,7 @@
       "body": "Review only. Confirm an appropriate published email or founder-approved contact route first. No email address has been guessed."
     }
   ],
-  "previous_version": "gix-uk-review-2026-10-29-v1",
+  "previous_version": "gix-uk-review-2026-10-29-v2",
   "company_positioning": "Software development and digital marketing that help businesses improve operations, connect with customers and grow.",
   "campaign_focus": "Start with a scoped website, web application or workflow integration brief. Explain the wider software and digital marketing capability when relevant.",
   "services": {
@@ -103,5 +103,6 @@
       "Livestreaming and event production",
       "SEO and content marketing"
     ]
-  }
+  },
+  "previous_snapshot": "deploy/gix_launch.v2.json"
 }

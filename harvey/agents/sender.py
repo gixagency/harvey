@@ -774,11 +774,15 @@ class Sender:
             colleague = await self.state.colleague_who_replied(prospect.id)
             if colleague:
                 return "cancelled", f"{COLLEAGUE_REPLIED} ({colleague})"
+        from harvey.published_contact import has_review
+        from harvey.paths import PROJECT_ROOT
+        published_review = await has_review(self.state, item, prospect, PROJECT_ROOT)
         gate = pre_send_check(
             item["to_email"], item["subject"], self._outgoing_body(item),
             prospect=prospect, allow_risky=allow_risky, kind=item["kind"],
             postal_address=compliance_of(self.config).postal_address,
             do_not_contact=live_do_not_contact(self.config),
+            published_address_approved=published_review,
         )
         if not gate:
             logger.warning(
