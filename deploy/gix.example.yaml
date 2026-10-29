@@ -1,0 +1,89 @@
+persona:
+  name: Tonny Mpagi Preacher
+  company: GIX Agency
+  role: Founder
+  email: ''
+  linkedin: ''
+  tone: Direct, warm, concise and honest. Never invent customers, results, partnerships
+    or capabilities.
+product:
+  name: GIX Agency — software development for agencies
+  description: Website and custom software development for marketing, advertising,
+    design and digital agencies. Help agency owners deliver client projects and organise
+    internal work with tailored systems. Qualify the actual need before proposing
+    a solution.
+  pricing: Custom quotation after scope review. Do not quote a price, discount or
+    delivery date without Tonny approval.
+  key_benefits:
+  - Additional website and software delivery capacity for agency projects
+  - Business applications and internal systems tailored to agency workflows
+  - Direct discussion with the founder to scope a practical solution
+  objection_responses:
+    already have a solution: Acknowledge their existing setup. Ask about unmet needs
+      only if appropriate; do not push.
+    too expensive: Ask about scope and budget without promising a discount.
+    not interested: Respect the response and stop the pitch.
+  offer:
+    primary: Website and custom software development for agencies
+    entry: A short conversation about a specific delivery or workflow need
+    goal: get_reply
+    booking_method: ask_preference
+    booking_url: ''
+    meeting_duration: 15 minutes
+    meeting_owner: Tonny Mpagi Preacher
+icp:
+  industries:
+  - Marketing agency
+  - Advertising agency
+  - Design agency
+  - Digital agency
+  company_size: ''
+  titles:
+  - Founder
+  - Co-Founder
+  - Owner
+  - Managing Director
+  - Head of Operations
+  geography:
+  - Kampala, Uganda
+  - Nairobi, Kenya
+  - Kigali, Rwanda
+  hiring_signals: []
+channels:
+  email:
+    enabled: false
+    provider: gmail
+    max_daily_sends: 5
+    require_approval: true
+    send_to_risky: false
+    max_bounce_rate: 0.05
+    warmup:
+      start_date: ''
+      min_days: 14
+      start_sends: 5
+      daily_increase: 3
+      dkim_selector: ''
+  linkedin:
+    enabled: false
+    max_daily_connections: 20
+    max_daily_messages: 10
+usage:
+  max_daily_claude_percent: 20
+  heartbeat_interval_minutes: 15
+  quiet_hours:
+    start: '18:00'
+    end: 08:00
+    timezone: Africa/Kampala
+compliance:
+  postal_address: ''
+  opt_out_line: Not interested? Reply "no thanks" and I won't email again.
+  do_not_contact: []
+  precleared:
+    enabled: false
+    sender_country: ''
+    address_source: unknown
+    prospect_country: ''
+brain:
+  provider: codex
+  model: ''
+  reasoning_effort: ''

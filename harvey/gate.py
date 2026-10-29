@@ -176,6 +176,7 @@ def pre_send_check(
     kind: str = "sequence",
     postal_address: str = "",
     do_not_contact=(),
+    published_address_approved: bool = False,
 ) -> GateResult:
     """Run every deterministic check. Returns ok=False with reasons on any hit.
 
@@ -201,7 +202,10 @@ def pre_send_check(
             reasons.append("recipient does not match the prospect record")
         allowed = DELIVERABLE_STATUSES if allow_risky else {"verified"}
         # Replies go back to someone who emailed US — deliverability proven.
-        if kind == "sequence" and (prospect.email_status or "guess") not in allowed:
+        manually_reviewed = (published_address_approved and kind == "sequence"
+                             and (prospect.email_status or "guess") == "guess"
+                             and getattr(prospect, "source", "") == "company_inbox")
+        if kind == "sequence" and (prospect.email_status or "guess") not in allowed and not manually_reviewed:
             reasons.append(
                 f"email_status '{prospect.email_status or 'guess'}' is not deliverable"
             )

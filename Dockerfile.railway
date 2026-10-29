@@ -1,0 +1,16 @@
+FROM node:24-bookworm-slim AS node
+FROM python:3.12-slim-bookworm
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PIP_NO_CACHE_DIR=1
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
+RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+    && npm install -g @openai/codex@0.159.3
+WORKDIR /opt/harvey
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY harvey/ harvey/
+COPY prompts/ prompts/
+COPY skills/ skills/
+COPY deploy/ deploy/
+# Railway volume is root-owned. Secrets and the writable app live on it.
+CMD ["python", "/opt/harvey/deploy/railway_start.py"]

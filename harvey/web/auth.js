@@ -53,7 +53,9 @@ function authFetch(path, opts) {
   if (token) headers.set('Authorization', 'Bearer ' + token);
   o.headers = headers;
   o.mode = 'same-origin';
-  o.credentials = 'omit';
+  // Only the authenticated Gmail OAuth start needs to set its short-lived
+  // browser-binding cookie. Dashboard authentication remains bearer-only.
+  o.credentials = url.pathname === '/api/gmail/connect' ? 'same-origin' : 'omit';
   o.cache = 'no-store';
   o.redirect = 'error';
   // Not 'no-referrer': per the Fetch spec that makes a POST's Origin "null"

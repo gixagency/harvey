@@ -1217,6 +1217,9 @@ function pageCohort(dir) {
 // ── Settings ──
 
 async function loadSettings() {
+  loadGixLaunchReview();
+  loadCodexLogin();
+  document.getElementById('gmail-redirect-uri').textContent = window.location.origin + '/oauth/gmail/callback';
   const data = await api('/api/settings');
   if (!data) return;
 
@@ -1285,7 +1288,7 @@ function saveGmail() {
   const payload = {GMAIL_CLIENT_ID: document.getElementById('gmail-id').value.trim()};
   const sec = document.getElementById('gmail-secret').value;
   if (sec) payload.GMAIL_CLIENT_SECRET = sec;
-  saveEnv(payload, 'Gmail OAuth saved. Now run "harvey gmail auth" in your terminal.').then(loadSettings);
+  saveEnv(payload, 'Gmail credentials saved. Click Connect Gmail next.').then(loadSettings);
 }
 
 function saveSmtp() {
@@ -1670,6 +1673,7 @@ async function loadOutbox() {
     table('Approved &amp; scheduled', data.approved, [
       ['To', r => r.to_email], ['Step', r => r.step], ['Subject', r => r.subject],
       ['Sends', r => r.status === 'sending' ? badge(r.status) : escHtml(formatDate(r.send_at)), true, true],
+      ['Address review', r => r.published_review_eligible ? (r.published_review_approved ? 'Published address approved; unverified' : '<button class="btn btn-secondary btn-sm" onclick="approvePublishedContact(' + jsq(r.id) + ')">Approve published address</button>') : '', false, true],
     ]) +
     table('Recently sent', data.sent, [
       ['To', r => r.to_email], ['Step', r => r.step], ['Subject', r => r.subject],
@@ -1888,6 +1892,9 @@ function renderDesk(items, i) {
           'email can try to steer what Harvey writes.</div></div></div>'
         : '') +
       draft + footer +
+      (cur.published_review_eligible && !editing
+        ? '<div class="banner wait"><div><b>Published address — mailbox unverified</b><p>You may approve this exact first message without a paid verifier. A published address can still bounce.</p>' +
+          '<button class="btn btn-secondary" onclick="approvePublishedContact(' + jsq(cur.id) + ')">Approve published address &amp; email</button></div></div>' : '') +
       '<div class="desk-actions">' + actions +
         '<span class="muted" style="font-size:12px;margin-left:auto">' +
           (i + 1) + ' of ' + items.length + '</span>' +
@@ -2614,3 +2621,107 @@ setInterval(() => {
     case 'controls': loadLogs(); break;
   }
 }, 15000);
+
+// A login keeps running on the server if the tab is refreshed. Never put the
+// one-time code or native credentials into browser storage or log output.
+let codexLoginTimer = null;
+let codexLoginRequest = false;
+async function loadCodexLogin() {
+  clearTimeout(codexLoginTimer);
+  const data = await api('/api/codex/login');
+  if (!data) {
+    document.getElementById('codex-login-message').textContent = 'Could not reach the server. Refresh Settings to reconnect.';
+    return;
+  }
+  renderCodexLogin(data);
+}
+function renderCodexLogin(data) {
+  const busy = ['starting', 'waiting', 'checking'].includes(data.state);
+  document.getElementById('codex-login-message').textContent = data.message || 'Connection status unavailable.';
+  document.getElementById('codex-connect').disabled = busy;
+  document.getElementById('codex-check').disabled = busy;
+  document.getElementById('codex-cancel').hidden = !busy;
+  const valid = data.state === 'waiting' && data.verification_url === 'https://auth.openai.com/codex/device';
+  document.getElementById('codex-login-prompt').hidden = !valid;
+  document.getElementById('codex-login-code').textContent = valid ? data.user_code : '';
+  clearTimeout(codexLoginTimer);
+  if (busy) codexLoginTimer = setTimeout(loadCodexLogin, 2000);
+}
+async function codexLoginAction(action) {
+  if (codexLoginRequest) return;
+  codexLoginRequest = true;
+  const path = action === 'connect' ? '/api/codex/login' : action === 'check' ? '/api/codex/check' : '/api/codex/login/cancel';
+  try {
+    const data = await api(path, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({})});
+    if (data) renderCodexLogin(data);
+    else document.getElementById('codex-login-message').textContent = 'Could not reach the server. Refresh Settings and try again.';
+  } finally { codexLoginRequest = false; }
+}
+
+async function connectGmail() {
+  const button = document.getElementById('gmail-connect');
+  button.disabled = true;
+  document.getElementById('gmail-connect-link-wrap').hidden = true;
+  try {
+    const data = await api('/api/gmail/connect', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({})});
+    document.getElementById('gmail-connect-message').textContent = data && data.message || 'Could not start Gmail sign-in. Try again.';
+    if (data && data.success) {
+      const url = new URL(data.authorization_url);
+      if (url.origin !== 'https://accounts.google.com' || url.pathname !== '/o/oauth2/v2/auth') throw new Error('Unexpected sign-in URL');
+      document.getElementById('gmail-connect-link').href = url.href;
+      document.getElementById('gmail-connect-link-wrap').hidden = false;
+    }
+  } catch {
+    document.getElementById('gmail-connect-message').textContent = 'Could not start Gmail sign-in. Refresh Settings and try again.';
+  } finally { button.disabled = false; }
+}
+async function checkGmailConnection() {
+  document.getElementById('gmail-connect-message').textContent = 'Checking Gmail…';
+  const data = await api('/api/gmail/check', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({})});
+  document.getElementById('gmail-connect-message').textContent = data && data.message || 'Could not reach Harvey. Try again.';
+  if (data && data.success) {
+    document.getElementById('gmail-connect-link-wrap').hidden = true;
+    loadSettings();
+  }
+}
+
+async function loadGixLaunchReview() {
+  const pack = await api('/api/gix-launch');
+  const el = document.getElementById('gix-launch-review-card');
+  if (!pack) { el.textContent = 'Could not load the pilot review. Refresh Settings to retry.'; return; }
+  el.innerHTML = '<h3>' + escHtml(pack.offer) + '</h3><p>' + escHtml(pack.company_positioning || '') + '</p><p>' + escHtml(pack.market) + '</p>' +
+    '<p>' + escHtml(pack.campaign_focus || '') + '</p>' +
+    (pack.services ? Object.entries(pack.services).map(([group, items]) => '<p><strong>' + escHtml(group) + ':</strong> ' + items.map(escHtml).join(' · ') + '</p>').join('') : '') +
+    '<p>' + escHtml(pack.pricing) + '</p><p><strong>Training: </strong>' + (pack.prepared ? 'GIX product knowledge loaded.' : 'Waiting for preparation.') + '</p>' +
+    '<p><strong>Verification: </strong>' + escHtml(pack.verification) + '</p>' +
+    '<p>' + (pack.verification_key_present ? 'A verifier key is configured; contacts still need checking.' : 'Optional: add a verifier key below, or individually approve the researched published addresses in Outbox. Publication is not mailbox verification.') + '</p>' +
+    '<p>Review the four introductions in Outbox and all five agencies in Companies. Sending: ' + (pack.sending_enabled && !pack.sending_paused ? 'enabled with individual approval required.' : 'disabled or paused.') + '</p>' +
+    '<ul>' + pack.leads.map(x => '<li><strong>' + escHtml(x.name) + '</strong> — ' + escHtml(x.priority) + '. ' + escHtml(x.evidence) +
+      ' <a href="' + safeHref(x.source_url) + '" target="_blank" rel="noopener noreferrer">Source ↗</a></li>').join('') + '</ul>' +
+    '<p><strong>Before release:</strong></p><ul>' + pack.blockers.map(x => '<li>' + escHtml(x) + '</li>').join('') + '</ul>';
+}
+
+async function approvePublishedContact(id) {
+  if (!confirm('Approve this exact first email to an address published on the agency website? The mailbox has NOT been verified and may bounce. This approval does not enable sending.')) return;
+  const data = await api('/api/outbox/' + encodeURIComponent(id) + '/approve-published', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({confirm: 'send_this_published_address_unverified'})
+  });
+  showToast(data && data.success ? data.message : failMsg(data, 'Could not approve this published contact.'), data && data.success ? 'success' : 'error');
+  loadOutbox();
+}
+
+async function enableApprovedPilot() {
+  const address = document.getElementById('pilot-postal-address').value.trim();
+  if (address.length < 10) { showToast('Enter your complete real sender postal address first.', 'error'); return; }
+  if (!confirm('Start Harvey and allow it to send the pilot emails you individually approved? Published addresses remain unverified. Sending is limited to business hours and five emails per day.')) return;
+  const button = document.getElementById('pilot-enable');
+  button.disabled = true;
+  document.getElementById('pilot-enable-message').textContent = 'Checking connections and approved messages…';
+  try {
+    const data = await api('/api/gix-launch/enable-approved', {method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({confirm:'enable_individually_approved_pilot', postal_address:address})});
+    document.getElementById('pilot-enable-message').textContent = data && data.message || 'Could not enable sending. Check your connections and retry.';
+    loadGixLaunchReview();
+  } finally { button.disabled = false; }
+}

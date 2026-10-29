@@ -1,0 +1,81 @@
+{
+  "version": "gix-uk-review-2026-10-29-v1",
+  "market": "United Kingdom — proposed pilot for founder approval",
+  "offer": "Scoped website and custom web application delivery support for agencies",
+  "pricing": "Custom quote after scope review; no fixed prices or delivery promises authorized",
+  "sender": "Tonny Mpagi Preacher <gixinvestmentug@gmail.com>",
+  "sources": [
+    "https://gixagency.com/"
+  ],
+  "verification": "Published contact details only. No mailbox-verifier key has been supplied. All addresses remain unverified.",
+  "blockers": [
+    "Founder approval of UK pilot, offer, list and copy",
+    "Mailbox verification key and successful verdicts",
+    "Confirmed sender postal address and recipient suitability review",
+    "Test send and reply before any outreach"
+  ],
+  "leads": [
+    {
+      "name": "Mark Design",
+      "domain": "mark-design.co.uk",
+      "location": "Brighton, United Kingdom",
+      "email": "hello@mark-design.co.uk",
+      "contact": "Gus Mark / studio team",
+      "source_url": "https://www.mark-design.co.uk/about/",
+      "evidence": "Its own About page describes a network including developers and collaboration with agencies and specialist partners.",
+      "priority": "high",
+      "subject": "Development support for Mark Design",
+      "body": "Hi Gus,\n\nI read that Mark Design brings in specialist partners, including developers, around each project.\n\nI’m Tonny, founder of GIX Agency. We build websites and custom web applications, and I’m looking to develop working relationships with design studios that occasionally need delivery support.\n\nWould you be open to a short introduction to see whether we could be useful on a future brief?\n\nTonny Mpagi Preacher\nGIX Agency\nhttps://gixagency.com/\n\nIf this isn’t relevant, reply ‘no thanks’ and I won’t follow up."
+    },
+    {
+      "name": "Cojo",
+      "domain": "hicojo.com",
+      "location": "London, United Kingdom",
+      "email": "team@hicojo.com",
+      "contact": "Studio team; decision-maker to confirm",
+      "source_url": "https://hicojo.com/about/",
+      "evidence": "Its About page says it works with development partners and CTOs for full product builds.",
+      "priority": "high",
+      "subject": "A potential development partner for Cojo",
+      "body": "Hi Cojo team,\n\nYour About page mentions working with development partners and CTOs when a project needs a full product build.\n\nI’m Tonny, founder of GIX Agency. We build websites and custom web applications, and I’d like to explore whether we could support a future brief alongside your product design work.\n\nAre you open to introductions from additional development partners?\n\nTonny Mpagi Preacher\nGIX Agency\nhttps://gixagency.com/\n\nIf this isn’t relevant, reply ‘no thanks’ and I won’t follow up."
+    },
+    {
+      "name": "Extract Studio",
+      "domain": "extract.studio",
+      "location": "London, United Kingdom",
+      "email": "collab@extract.studio",
+      "contact": "Collaborations team",
+      "source_url": "https://www.extract.studio/about",
+      "evidence": "The Collaborators section invites introductions and portfolios; its digital services include web development and CMS integration.",
+      "priority": "high",
+      "subject": "GIX Agency — development collaboration",
+      "body": "Hi Extract team,\n\nI saw your invitation for collaborators who can join the team around a specific brief.\n\nI’m Tonny, founder of GIX Agency. We build websites and custom web applications, and I’d like to introduce our work for consideration on future digital projects. Our group product work is at https://gixagency.com/.\n\nWould you consider an additional software delivery partner?\n\nTonny Mpagi Preacher\nGIX Agency\n\nIf this isn’t relevant, reply ‘no thanks’ and I won’t follow up."
+    },
+    {
+      "name": "Set Studio",
+      "domain": "set.studio",
+      "location": "United Kingdom",
+      "email": "enquiries@set.studio",
+      "contact": "Studio team; Andy Bell is listed as founder",
+      "source_url": "https://set.studio/contact-us/",
+      "evidence": "Its studio homepage describes a network of independent specialists. Contact page publishes the enquiries address. Existing strong technical capability makes this a secondary priority.",
+      "evidence_url": "https://set.studio/",
+      "priority": "secondary",
+      "subject": "An introduction from GIX Agency",
+      "body": "Hi Set Studio team,\n\nI noticed that your studio works with a network of independent specialists alongside the core team.\n\nI’m Tonny, founder of GIX Agency. We build websites and custom web applications. I realise you already have strong technical capability, but wanted to ask whether you consider additional delivery partners for suitable briefs.\n\nWould a brief introduction be useful?\n\nTonny Mpagi Preacher\nGIX Agency\nhttps://gixagency.com/\n\nIf this isn’t relevant, reply ‘no thanks’ and I won’t follow up."
+    },
+    {
+      "name": "Studio Exon",
+      "domain": "studioexon.co.uk",
+      "location": "Eastbourne / Bath, United Kingdom",
+      "email": "",
+      "contact": "Tom Exon, Creative Director",
+      "source_url": "https://www.studioexon.co.uk/studio/",
+      "contact_url": "https://www.studioexon.co.uk/contact/",
+      "evidence": "Studio page describes a specialist network including developers. Contact page offers a form; no email address was confirmed.",
+      "priority": "research_only",
+      "subject": "Potential development collaboration",
+      "body": "Review only. Confirm an appropriate published email or founder-approved contact route first. No email address has been guessed."
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "version": "gix-uk-review-2026-10-29-v3",
+  "market": "United Kingdom — proposed pilot for founder approval",
+  "offer": "Website, custom software and automation delivery support for agencies",
+  "pricing": "Project-based quote after reviewing the brief; ongoing support scoped separately. No fixed prices, discounts or timelines approved.",
+  "sender": "Tonny Mpagi Preacher <gixinvestmentug@gmail.com>",
+  "sources": [
+    "https://gixagency.com/projects",
+    "https://gixagency.com/services/custom-software-development",
+    "https://gixagency.com/services/business-automation",
+    "https://gixagency.com/services/digital-marketing-strategy",
+    "https://gixagency.com/services/video-production-photography"
+  ],
+  "verification": "Published addresses remain mailbox-unverified. Either verify them with an optional provider, or explicitly approve a researched published address and exact first email in Outbox.",
+  "blockers": [
+    "Founder approval of UK pilot, offer, list and copy",
+    "Verified mailbox OR explicit per-message approval of the researched published address",
+    "Confirmed sender postal address and recipient suitability review",
+    "Working Gmail/Codex connections and deliberate activation of approved sending"
+  ],
+  "leads": [
+    {
+      "name": "Mark Design",
+      "domain": "mark-design.co.uk",
+      "location": "Brighton, United Kingdom",
+      "email": "hello@mark-design.co.uk",
+      "contact": "Gus Mark / studio team",
+      "source_url": "https://www.mark-design.co.uk/about/",
+      "evidence": "Its own About page describes a network including developers and collaboration with agencies and specialist partners.",
+      "priority": "high",
+      "subject": "Website delivery support for Mark Design",
+      "body": "Hi Gus,\n\nI saw that Mark Design brings specialist developers into projects alongside your design work.\n\nI’m Tonny, founder of GIX Agency. We develop websites and custom business tools, and could work from your brief when a client project needs additional technical delivery.\n\nWould it be useful to consider us for a future website or application brief?\n\nTonny Mpagi Preacher\nGIX Agency\nhttps://gixagency.com/\n\nIf this isn’t relevant, reply ‘no thanks’ and I won’t follow up."
+    },
+    {
+      "name": "Cojo",
+      "domain": "hicojo.com",
+      "location": "London, United Kingdom",
+      "email": "team@hicojo.com",
+      "contact": "Studio team; decision-maker to confirm",
+      "source_url": "https://hicojo.com/about/",
+      "evidence": "Its About page says it works with development partners and CTOs for full product builds.",
+      "priority": "high",
+      "subject": "Development support for Cojo’s product briefs",
+      "body": "Hi Cojo team,\n\nYour About page mentions bringing in development partners for full product builds.\n\nI’m Tonny, founder of GIX Agency. We build custom web applications and connected business systems, including portals, dashboards and workflow integrations. I’d like to explore supporting the development side of a brief alongside your product design team.\n\nAre you open to considering another development partner?\n\nTonny Mpagi Preacher\nGIX Agency\nhttps://gixagency.com/\n\nIf this isn’t relevant, reply ‘no thanks’ and I won’t follow up."
+    },
+    {
+      "name": "Extract Studio",
+      "domain": "extract.studio",
+      "location": "London, United Kingdom",
+      "email": "collab@extract.studio",
+      "contact": "Collaborations team",
+      "source_url": "https://www.extract.studio/about",
+      "evidence": "The Collaborators section invites introductions and portfolios; its digital services include web development and CMS integration.",
+      "priority": "high",
+      "subject": "Development collaboration with Extract",
+      "body": "Hi Extract team,\n\nI saw your invitation for collaborators and your work across website design, development and CMS integration.\n\nI’m Tonny, founder of GIX Agency. We combine software development and digital marketing. For a collaboration with Extract, I’d focus on website builds, custom web applications or integrations that support your digital briefs. Our own product work is at https://gixagency.com/projects.\n\nWould that be relevant to your collaborator network?\n\nTonny Mpagi Preacher\nGIX Agency\n\nIf this isn’t relevant, reply ‘no thanks’ and I won’t follow up."
+    },
+    {
+      "name": "Set Studio",
+      "domain": "set.studio",
+      "location": "United Kingdom",
+      "email": "enquiries@set.studio",
+      "contact": "Studio team; Andy Bell is listed as founder",
+      "source_url": "https://set.studio/contact-us/",
+      "evidence": "Its studio homepage describes a network of independent specialists. Contact page publishes the enquiries address. Existing strong technical capability makes this a secondary priority.",
+      "evidence_url": "https://set.studio/",
+      "priority": "secondary",
+      "subject": "Additional delivery support for Set Studio",
+      "body": "Hi Set Studio team,\n\nI noticed that you bring independent specialists into the studio around particular needs.\n\nI’m Tonny, founder of GIX Agency. We develop websites, custom business applications and workflow integrations. If you ever need additional capacity on a suitable brief, I’d be interested in discussing how we could support your team.\n\nDo you consider introductions from additional development partners?\n\nTonny Mpagi Preacher\nGIX Agency\nhttps://gixagency.com/\n\nIf this isn’t relevant, reply ‘no thanks’ and I won’t follow up."
+    },
+    {
+      "name": "Studio Exon",
+      "domain": "studioexon.co.uk",
+      "location": "Eastbourne / Bath, United Kingdom",
+      "email": "",
+      "contact": "Tom Exon, Creative Director",
+      "source_url": "https://www.studioexon.co.uk/studio/",
+      "contact_url": "https://www.studioexon.co.uk/contact/",
+      "evidence": "Studio page describes a specialist network including developers. Contact page offers a form; no email address was confirmed.",
+      "priority": "research_only",
+      "subject": "Potential development collaboration",
+      "body": "Review only. Confirm an appropriate published email or founder-approved contact route first. No email address has been guessed."
+    }
+  ],
+  "previous_version": "gix-uk-review-2026-10-29-v2",
+  "company_positioning": "Software development and digital marketing that help businesses improve operations, connect with customers and grow.",
+  "campaign_focus": "Start with a scoped website, web application or workflow integration brief. Explain the wider software and digital marketing capability when relevant.",
+  "services": {
+    "Software": [
+      "Custom software development",
+      "Website design and development",
+      "SaaS development",
+      "Mobile app development",
+      "Business automation and integrations",
+      "UI/UX and product design"
+    ],
+    "Digital Marketing": [
+      "Digital marketing strategy",
+      "Social media management",
+      "Paid advertising",
+      "Branding and graphic design",
+      "Video production and photography",
+      "Livestreaming and event production",
+      "SEO and content marketing"
+    ]
+  },
+  "previous_snapshot": "deploy/gix_launch.v2.json"
+}
