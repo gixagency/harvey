@@ -2646,7 +2646,7 @@ async function codexLoginAction(action) {
   codexLoginRequest = true;
   const path = action === 'connect' ? '/api/codex/login' : action === 'check' ? '/api/codex/check' : '/api/codex/login/cancel';
   try {
-    const data = await api(path, {method: 'POST', body: JSON.stringify({})});
+    const data = await api(path, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({})});
     if (data) renderCodexLogin(data);
     else document.getElementById('codex-login-message').textContent = 'Could not reach the server. Refresh Settings and try again.';
   } finally { codexLoginRequest = false; }
