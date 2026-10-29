@@ -58,3 +58,9 @@ The one-time `launch_setup.prepare` step loads `deploy/gix_launch.json` and `dep
 A version marker prevents repeated imports and prevents later deploys from resetting founder decisions. Existing contacts and opt-outs are never overwritten. Configuration uses harvey.local.yaml if present. GIX training is manually curated from founder instructions and the current GIX website; no claim is made that the automatic URL trainer or a live Codex generation call was run. Internal group projects must not be represented as independent paying-client references.
 
 Settings shows a GIX pilot review card with sources and outstanding checks. No mailbox verification was completed during preparation: publication of an address is not a verification verdict. Contacts are deliberately graded `guess` and cannot send. Add a Reoon, ZeroBounce or Hunter API key in Settings, verify the selected contacts, confirm recipient suitability and sender postal address, test send/reply, then explicitly approve the campaign and individual messages before enabling email or removing the send pause. No external account, API subscription or credits were purchased by this preparation.
+
+### Website refinement v2
+
+The 29 October website refinement loads the newer Software and Digital Marketing service structure and updates the agency pitch around website builds, custom applications and workflow integrations. The full service catalogue is available to the agents without listing every service in first contact.
+
+The v2 migration only rewrites v1 Outbox rows that are still pending review and match the original subject and body exactly. It preserves human edits, approved/sent messages, existing contact grades and opt-outs. Existing rows are moved to the v2 review campaign instead of duplicating introductions. `deploy/gix_launch.v1.json` is the comparison snapshot, not an active second contact list. Sending remains disabled and paused after the refinement.

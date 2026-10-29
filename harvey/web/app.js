@@ -2685,7 +2685,9 @@ async function loadGixLaunchReview() {
   const pack = await api('/api/gix-launch');
   const el = document.getElementById('gix-launch-review-card');
   if (!pack) { el.textContent = 'Could not load the pilot review. Refresh Settings to retry.'; return; }
-  el.innerHTML = '<h3>' + escHtml(pack.offer) + '</h3><p>' + escHtml(pack.market) + '</p>' +
+  el.innerHTML = '<h3>' + escHtml(pack.offer) + '</h3><p>' + escHtml(pack.company_positioning || '') + '</p><p>' + escHtml(pack.market) + '</p>' +
+    '<p>' + escHtml(pack.campaign_focus || '') + '</p>' +
+    (pack.services ? Object.entries(pack.services).map(([group, items]) => '<p><strong>' + escHtml(group) + ':</strong> ' + items.map(escHtml).join(' · ') + '</p>').join('') : '') +
     '<p>' + escHtml(pack.pricing) + '</p><p><strong>Training: </strong>' + (pack.prepared ? 'GIX product knowledge loaded.' : 'Waiting for preparation.') + '</p>' +
     '<p><strong>Verification: </strong>' + escHtml(pack.verification) + '</p>' +
     '<p>' + (pack.verification_key_present ? 'A verifier key is configured; contacts still need checking.' : 'Action needed: add one verifier API key under Email verification below.') + '</p>' +
