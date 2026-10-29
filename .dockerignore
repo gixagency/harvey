@@ -2,6 +2,10 @@
 # credentials, Git history, environments, or browser artifacts to the builder.
 **
 !Dockerfile
+!Dockerfile.railway
+!railway.json
+!deploy/
+!deploy/**
 !requirements.txt
 !harvey.yaml
 !harvey/
