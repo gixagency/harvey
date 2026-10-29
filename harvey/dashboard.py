@@ -191,7 +191,7 @@ async def get_setup_status():
     # 1. Venv
     checks.append({
         "id": "venv", "label": "Python virtual environment",
-        "done": (PROJECT_ROOT / ".venv").is_dir(),
+        "done": (PROJECT_ROOT / ".venv").is_dir() or bool(os.getenv("RAILWAY_VOLUME_MOUNT_PATH")),
         "required": True,
         "help": "Run: python3 -m venv .venv && source .venv/bin/activate && pip install -e .",
     })
@@ -215,8 +215,7 @@ async def get_setup_status():
     if provider == "gmail":
         provider_done = _has("GMAIL_CLIENT_ID", "GMAIL_CLIENT_SECRET") and \
             (PROJECT_ROOT / "data" / "gmail_token.json").is_file()
-        provider_help = ("Set GMAIL_CLIENT_ID/SECRET in Settings, then run "
-                         "'harvey gmail auth' in your terminal.")
+        provider_help = ("Save your Google Web client ID/secret in Settings, then click Connect Gmail.")
     elif provider == "microsoft":
         provider_done = _has("M365_CLIENT_ID") and \
             (PROJECT_ROOT / "data" / "m365_token.json").is_file()
@@ -374,6 +373,19 @@ async def gmail_web_connect():
 async def gmail_web_check():
     from harvey.gmail_web import check
     return await check()
+
+
+@app.get("/api/gix-launch")
+async def gix_launch_review():
+    pack = json.loads((PROJECT_ROOT / "deploy" / "gix_launch.json").read_text())
+    state = _state()
+    await state.init_db()
+    pack["prepared"] = bool(await state.get_setting("launch_setup:" + pack["version"]))
+    values = _read_env_file()
+    pack["verification_key_present"] = any(values.get(k) or os.getenv(k) for k in
+        ("REOON_API_KEY", "ZEROBOUNCE_API_KEY", "HUNTER_API_KEY"))
+    pack["ready_for_sending"] = False
+    return pack
 
 
 @app.get("/api/settings")

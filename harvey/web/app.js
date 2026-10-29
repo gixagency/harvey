@@ -1217,6 +1217,7 @@ function pageCohort(dir) {
 // ── Settings ──
 
 async function loadSettings() {
+  loadGixLaunchReview();
   loadCodexLogin();
   document.getElementById('gmail-redirect-uri').textContent = window.location.origin + '/oauth/gmail/callback';
   const data = await api('/api/settings');
@@ -2678,4 +2679,18 @@ async function checkGmailConnection() {
     document.getElementById('gmail-connect-link-wrap').hidden = true;
     loadSettings();
   }
+}
+
+async function loadGixLaunchReview() {
+  const pack = await api('/api/gix-launch');
+  const el = document.getElementById('gix-launch-review-card');
+  if (!pack) { el.textContent = 'Could not load the pilot review. Refresh Settings to retry.'; return; }
+  el.innerHTML = '<h3>' + escHtml(pack.offer) + '</h3><p>' + escHtml(pack.market) + '</p>' +
+    '<p>' + escHtml(pack.pricing) + '</p><p><strong>Training: </strong>' + (pack.prepared ? 'GIX product knowledge loaded.' : 'Waiting for preparation.') + '</p>' +
+    '<p><strong>Verification: </strong>' + escHtml(pack.verification) + '</p>' +
+    '<p>' + (pack.verification_key_present ? 'A verifier key is configured; contacts still need checking.' : 'Action needed: add one verifier API key under Email verification below.') + '</p>' +
+    '<p>Sending remains disabled and paused. Review the four introductions in Outbox and all five agencies in Companies.</p>' +
+    '<ul>' + pack.leads.map(x => '<li><strong>' + escHtml(x.name) + '</strong> — ' + escHtml(x.priority) + '. ' + escHtml(x.evidence) +
+      ' <a href="' + safeHref(x.source_url) + '" target="_blank" rel="noopener noreferrer">Source ↗</a></li>').join('') + '</ul>' +
+    '<p><strong>Before release:</strong></p><ul>' + pack.blockers.map(x => '<li>' + escHtml(x) + '</li>').join('') + '</ul>';
 }
