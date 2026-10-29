@@ -1217,6 +1217,7 @@ function pageCohort(dir) {
 // ── Settings ──
 
 async function loadSettings() {
+  loadCodexLogin();
   const data = await api('/api/settings');
   if (!data) return;
 
@@ -2614,3 +2615,39 @@ setInterval(() => {
     case 'controls': loadLogs(); break;
   }
 }, 15000);
+
+// A login keeps running on the server if the tab is refreshed. Never put the
+// one-time code or native credentials into browser storage or log output.
+let codexLoginTimer = null;
+let codexLoginRequest = false;
+async function loadCodexLogin() {
+  clearTimeout(codexLoginTimer);
+  const data = await api('/api/codex/login');
+  if (!data) {
+    document.getElementById('codex-login-message').textContent = 'Could not reach the server. Refresh Settings to reconnect.';
+    return;
+  }
+  renderCodexLogin(data);
+}
+function renderCodexLogin(data) {
+  const busy = ['starting', 'waiting', 'checking'].includes(data.state);
+  document.getElementById('codex-login-message').textContent = data.message || 'Connection status unavailable.';
+  document.getElementById('codex-connect').disabled = busy;
+  document.getElementById('codex-check').disabled = busy;
+  document.getElementById('codex-cancel').hidden = !busy;
+  const valid = data.state === 'waiting' && data.verification_url === 'https://auth.openai.com/codex/device';
+  document.getElementById('codex-login-prompt').hidden = !valid;
+  document.getElementById('codex-login-code').textContent = valid ? data.user_code : '';
+  clearTimeout(codexLoginTimer);
+  if (busy) codexLoginTimer = setTimeout(loadCodexLogin, 2000);
+}
+async function codexLoginAction(action) {
+  if (codexLoginRequest) return;
+  codexLoginRequest = true;
+  const path = action === 'connect' ? '/api/codex/login' : action === 'check' ? '/api/codex/check' : '/api/codex/login/cancel';
+  try {
+    const data = await api(path, {method: 'POST', body: JSON.stringify({})});
+    if (data) renderCodexLogin(data);
+    else document.getElementById('codex-login-message').textContent = 'Could not reach the server. Refresh Settings and try again.';
+  } finally { codexLoginRequest = false; }
+}

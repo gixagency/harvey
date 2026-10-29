@@ -12,27 +12,16 @@ This adapter keeps Harvey's existing bearer-token API protection, checks the exa
 4. Deploy. The health check is `/healthz`. Open `https://YOUR-DOMAIN/#token=YOUR-TOKEN` to unlock the dashboard. Keep the link private. Changing HARVEY_ACCESS_TOKEN and redeploying rotates access.
 5. Confirm the dashboard loads and data survives a redeploy before enabling the worker. This is a single-user dashboard, not a multi-user team login system.
 
-## Connect Codex inside the running service
+## Connect Codex from the dashboard
 
-Use a Railway CLI **SSH session into the service**, not `railway shell` (which runs locally). See Railway's current SSH instructions. In that session run:
+1. Open Settings → AI connection → Connect Codex.
+2. Open the displayed OpenAI link yourself and enter the one-time code. Only continue if you initiated this login on your own Harvey dashboard. Keep the code private.
+3. Complete the ChatGPT sign-in, return to Harvey, and wait for Signed in.
+4. Click Check connection. Ready confirms Harvey's Codex preflight passed, without sending a sales message or making a generation call.
 
-```sh
-export HOME=/state/home
-export CODEX_HOME=/state/home/.codex
-cd /state/harvey
-codex login --device-auth
-```
+No Terminal or Railway CLI is needed for this flow. Device-code authorization must be enabled for your ChatGPT account. A code expires in 15 minutes; use Cancel or retry to replace it. Refreshing the dashboard retains a pending login, but a service restart cancels it. Existing credentials persist on the volume and are not removed by Cancel. Reconnecting changes the ChatGPT account used by this single-user service.
 
-Complete the displayed sign-in flow yourself. Never send anyone auth.json or the device code. Device authentication must be allowed by your ChatGPT account. Harvey pins Codex 0.159.3 to match its upstream isolation checks; do not upgrade it independently.
-
-Then check status without sending a sales message:
-
-```sh
-python -m harvey status --check
-python -m harvey sending pause
-```
-
-Expired or renewal-due logins need another sign-in. The credentials live on the volume, outside GitHub and deployment logs. A successful dashboard health check does not establish that the AI login is working.
+Harvey pins Codex 0.159.3 to match upstream isolation checks. Do not upgrade it independently. Expired or renewal-due logins need another Connect Codex flow. A healthy dashboard alone does not prove AI access. CLI authentication remains available as a fallback via Railway SSH with HOME=/state/home and CODEX_HOME=/state/home/.codex.
 
 ## Configure the business and mailbox
 

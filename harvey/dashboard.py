@@ -339,6 +339,31 @@ def _current_provider() -> str:
         return "instantly"
 
 
+# These routes inherit DashboardGuard token and origin protection.
+@app.get("/api/codex/login")
+async def codex_login_status():
+    from harvey.codex_login import login
+    return await login.status()
+
+
+@app.post("/api/codex/login")
+async def codex_login_start():
+    from harvey.codex_login import login
+    return await login.start()
+
+
+@app.post("/api/codex/login/cancel")
+async def codex_login_cancel():
+    from harvey.codex_login import login
+    return await login.cancel()
+
+
+@app.post("/api/codex/check")
+async def codex_login_check():
+    from harvey.codex_login import login
+    return await login.check()
+
+
 @app.get("/api/settings")
 async def get_settings():
     """Get current settings — presence flags only for secrets, never raw values."""
